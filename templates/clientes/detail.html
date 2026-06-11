@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}{{ cliente.nome }} — ClientesCRM{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">{{ cliente.nome }}</h1>
+    <p class="page-subtitle">Detalhes do cliente #{{ cliente.pk }}</p>
+  </div>
+  <div style="display:flex; gap:8px;">
+    <a href="{% url 'cliente_update' cliente.pk %}" class="btn btn-primary">Editar</a>
+    <a href="{% url 'cliente_list' %}" class="btn btn-secondary">← Voltar</a>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">Informações</span>
+    {% if cliente.ativo %}
+      <span class="badge badge-green">Ativo</span>
+    {% else %}
+      <span class="badge badge-gray">Inativo</span>
+    {% endif %}
+  </div>
+  <div class="card-body">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+      <div>
+        <label>Nome completo</label>
+        <p style="font-size: 0.95rem; font-weight: 500;">{{ cliente.nome }}</p>
+      </div>
+      <div>
+        <label>CPF</label>
+        <p style="font-family: 'DM Mono', monospace; font-size: 0.9rem;">{{ cliente.cpf }}</p>
+      </div>
+      <div>
+        <label>E-mail</label>
+        <p style="font-size: 0.9rem;">{{ cliente.email }}</p>
+      </div>
+      <div>
+        <label>Telefone</label>
+        <p style="font-size: 0.9rem;">{{ cliente.telefone }}</p>
+      </div>
+      {% if cliente.endereco %}
+      <div style="grid-column: 1 / -1;">
+        <label>Endereço</label>
+        <p style="font-size: 0.9rem;">
+          {{ cliente.endereco }}
+          {% if cliente.cidade %} — {{ cliente.cidade }}{% endif %}
+          {% if cliente.estado %}/{{ cliente.estado }}{% endif %}
+        </p>
+      </div>
+      {% endif %}
+      <div>
+        <label>Cadastrado em</label>
+        <p style="font-size: 0.85rem; color: #777;">{{ cliente.criado_em|date:"d/m/Y H:i" }}</p>
+      </div>
+      <div>
+        <label>Última atualização</label>
+        <p style="font-size: 0.85rem; color: #777;">{{ cliente.atualizado_em|date:"d/m/Y H:i" }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

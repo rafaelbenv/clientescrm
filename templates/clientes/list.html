@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}Clientes — ClientesCRM{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Clientes</h1>
+    <p class="page-subtitle">{{ clientes.count }} registro{{ clientes.count|pluralize }} encontrado{{ clientes.count|pluralize }}</p>
+  </div>
+  <a href="{% url 'cliente_create' %}" class="btn btn-primary">+ Novo Cliente</a>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <form method="get" class="search-bar" style="margin:0;">
+      <input class="form-input" type="text" name="q" value="{{ busca }}" placeholder="Buscar por nome, e-mail ou CPF…" />
+      <button type="submit" class="btn btn-secondary">Buscar</button>
+      {% if busca %}<a href="{% url 'cliente_list' %}" class="btn btn-secondary">Limpar</a>{% endif %}
+    </form>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nome</th>
+          <th>E-mail</th>
+          <th>Telefone</th>
+          <th>Cidade / Estado</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cliente in clientes %}
+        <tr>
+          <td style="font-family: 'DM Mono', monospace; color: #bbb; font-size: 0.78rem;">{{ cliente.pk }}</td>
+          <td style="font-weight: 500;">{{ cliente.nome }}</td>
+          <td style="color: #555;">{{ cliente.email }}</td>
+          <td>{{ cliente.telefone }}</td>
+          <td>
+            {% if cliente.cidade %}
+              {{ cliente.cidade }}{% if cliente.estado %} / {{ cliente.estado }}{% endif %}
+            {% else %}
+              <span style="color:#bbb;">—</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if cliente.ativo %}
+              <span class="badge badge-green">Ativo</span>
+            {% else %}
+              <span class="badge badge-gray">Inativo</span>
+            {% endif %}
+          </td>
+          <td>
+            <div style="display:flex; gap: 6px;">
+              <a href="{% url 'cliente_detail' cliente.pk %}" class="btn btn-secondary btn-sm">Ver</a>
+              <a href="{% url 'cliente_update' cliente.pk %}" class="btn btn-secondary btn-sm">Editar</a>
+              <a href="{% url 'cliente_delete' cliente.pk %}" class="btn btn-danger btn-sm">Excluir</a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" style="text-align:center; padding: 2.5rem; color: #aaa; font-size: 0.9rem;">
+            {% if busca %}Nenhum cliente encontrado para "{{ busca }}"{% else %}Nenhum cliente cadastrado ainda.{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
